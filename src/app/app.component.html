@@ -1,3 +1,9 @@
 <h1>App component</h1>
-<button (click)="increment()">+</button>
-<p>Count: {{ count$ | async }}</p>
+<input #val>
+
+<button (click)="increment(val.value)">+</button>
+<button (click)="decrement(val.value)">-</button>
+
+<p>Count: <span [textContent]="count$ |async"></span></p>
+<p>Count: <span [textContent]="count1$ |async"></span></p>
+<p>Count: <span [textContent]="count2$ |async"></span></p>
