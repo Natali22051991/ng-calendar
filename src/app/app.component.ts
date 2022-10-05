@@ -13,10 +13,12 @@ import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
 export class AppComponent implements OnInit, AfterViewInit {
   title = 'ng-calendar';
   private readonly _count$ = new BehaviorSubject<number>(1);
-  private readonly _count1$ = new BehaviorSubject<number>(this._count$.value*10);
-  private readonly _count2$ = new BehaviorSubject<number>(this._count$.value*100);
+  private readonly _count1$ = new BehaviorSubject<number>(this._count$.value * 10);
+  private readonly _count2$ = new BehaviorSubject<number>(this._count$.value * 100);
   private readonly _value$ = new BehaviorSubject<number>(this._count$.value);
 
+  // значение из первого поля
+  public readonly firestInputValue$ = new ReplaySubject<string>();
 
   public count$: Observable<number | undefined> | undefined;
   public count1$: Observable<number | undefined> | undefined;
@@ -29,8 +31,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this._count$.subscribe((val) => {
       this.logIncrement(val);
-      this._count1$.next(val*10);
-      this._count2$.next(val*100);
+      this._count1$.next(val * 10);
+      this._count2$.next(val * 100);
     })
   }
 
@@ -41,12 +43,17 @@ export class AppComponent implements OnInit, AfterViewInit {
     console.log(val * 10);
   }
 
-  increment(val: string) {
+  increment() {
     this._count$.next(+this._count$.value + 1)
   }
 
-  decrement(val: string) {
+  decrement() {
     this._count$.next(+this._count$.value - 1)
+  }
+
+  handlerFirstInput(val: string) {
+    console.log(val);
+    this.firestInputValue$.next(val);
   }
 
 }

@@ -1,8 +1,40 @@
 <h1>App component</h1>
-<input #val>
 
-<button (click)="increment(val.value)">+</button>
-<button (click)="decrement(val.value)">-</button>
+<div class="container">
+    <div class="container-input">
+        <h2>Первый инпут</h2>
+        <input #inp1>
+        <button (click)="handlerFirstInput(inp1.value)">{{inp1.value ? 'Текст из поля:  ' + inp1.value : 'НАЧНИ набирать и потом нажми'}}</button>
+        <br>
+        <h4>Значение из этого поля</h4>
+        <pre>{{ firestInputValue$ | async }}</pre>
+    </div>
+
+    <!-- Используй NgModel для взаимодействия с инпутом https://www.c-sharpcorner.com/article/ngmodel-in-angular-with-example/ -->
+    <div class="container-input">
+        <h2>Второй инпут</h2>
+        <input>
+        <button>Передать значение из этого поля</button>
+        <br>
+        <h4>Значение из этого поля</h4>
+        <pre></pre>
+    </div>
+
+    <!-- Используй директиву *ngIf для скрытия кнопки "Передать...", если в инпуте пусто и для скрытия кнопки "Очистить " - если в поле есть значение -->
+    <!-- https://angdev.ru/guide/directives/structure-directive/  https://www.c-sharpcorner.com/blogs/ngif-in-angular-with-example -->
+    <div class="container-input">
+        <h2>Третий инпут</h2>
+        <input>
+        <button>Передать значение из этого поля</button>
+        <button>Очистить поле</button>
+        <br>
+        <h4>Значение из этого поля</h4>
+        <pre></pre>
+    </div>
+</div>
+
+<button (click)="increment()">+</button>
+<button (click)="decrement()">-</button>
 
 <p>Count: <span [textContent]="count$ |async"></span></p>
 <p>Count: <span [textContent]="count1$ |async"></span></p>
