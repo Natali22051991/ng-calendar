@@ -15,8 +15,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   private readonly _count$ = new BehaviorSubject<number>(1);
   private readonly _count1$ = new BehaviorSubject<number>(this._count$.value*10);
   private readonly _count2$ = new BehaviorSubject<number>(this._count$.value*100);
-  private readonly _value$ = new BehaviorSubject<number>(this._count$.value);
-
+  private readonly _val$ = new BehaviorSubject<number>(this._count$.value*100);
 
   public count$: Observable<number | undefined> | undefined;
   public count1$: Observable<number | undefined> | undefined;
