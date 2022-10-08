@@ -25,8 +25,8 @@
     <div class="container-input">
         <h2>Третий инпут</h2>
         <input [(ngModel)]="name1">
-        <button (click)="handlerThirdInput(name1)">{{name1 ? 'Текст из поля:  ' + name1 : 'НАЧНИ набирать и потом нажми'}}></button>
-        <button *ngIf="name1" (click)="clearInput(name1)">Очистить поле</button>
+        <button *ngIf="name1" (click)="handlerThirdInput(name1)" >{{name1 ? 'Текст из поля:  ' + name1 : 'НАЧНИ набирать и потом нажми'}}></button>
+        <button  *ngIf="name1"(click)="clearInput(name1)">Очистить поле</button>
         <br>
         <h4>Значение из этого поля</h4>
         <pre >{{thirdInputValue$| async }}</pre>

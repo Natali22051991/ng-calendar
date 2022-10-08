@@ -57,6 +57,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this._count$.next(+this._count$.value - 1)
   }
 
+
+
   handlerFirstInput(val: string) {
     console.log(val);
     this.firstInputValue$.next(val);
