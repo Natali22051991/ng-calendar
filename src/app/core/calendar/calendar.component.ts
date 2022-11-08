@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatest, filter, map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
+import { CalendarService } from '../../services/calendar.service';
+import { CalendarDate } from '../../common/calendar-date';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.scss'],
+  styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit {
   title = 'ng-calendar';
@@ -23,76 +26,64 @@ export class CalendarComponent implements OnInit {
   text: string = '';
   dayData!: string[];
 
-  selectedMonth$ = new BehaviorSubject(this.currentDate.getMonth() + 1);
-  selectedYear$ = new BehaviorSubject(this.currentDate.getFullYear());
-  selectedDay$ = new BehaviorSubject(this.currentDate.getDate());
-  data$ = new BehaviorSubject(new Map<string, string[]>());
+  public selectedMonth$ = this.service.selectedMonth$;
+  public selectedYear$ = this.service.selectedYear$;
+  public selectedDay$ = this.service.selectedDay$;
+  public selectedDate$ = this.service.selectedDate$;
+  public data$ = new BehaviorSubject(new Map<string, string[]>());
 
-  viewDate$ = combineLatest([this.selectedMonth$, this.selectedYear$]).pipe(
-    map(([m, y]) => {
-      console.log(m, y);
+  public viewDate$ = this.service.viewDate$;
 
-      const month = new Intl.DateTimeFormat('ru-RU', {
-        month: 'long',
-      }).format(new Date(m.toString()));
-      console.log(month);
-
-      return month + ' ' + y;
-    })
-  );
-
-  // nextDay = this.currentMonth - this.selectedDay$.value;
-
-  month$ = this.selectedMonth$.pipe(
-    map((month) => {
-      console.log(month);
-      const date = new Date(this.selectedYear$.value, month, 1);
-      const days = 33 - new Date(this.selectedYear$.value, month, 33).getDate();
-      const day = new Date(this.selectedYear$.value, month, 1).getDay();
-      console.log(date);
-      console.log(day);
-      console.log(days);
-
-      return new Array(42)
-        .fill('')
-        .map((el, i) =>
-          i + 1 < day ? '' : i > days + day - 2 ? '' : i + 2 - day
-        );
-    })
+  public month$: Observable<('' | CalendarDate)[]> = this.route.queryParams.pipe(
+    map(params => {
+      const month = params['month'];
+      const year = params['year'];
+      return {month, year};
+    }),
+    map(({
+           month,
+           year
+         }) => CalendarDate.getCalendarMonth(year, month).map(day => day === '' ? day : new CalendarDate(new Date(`${year}-${month}-${day}`))))
   );
 
   prev(): void {
-    this.selectedMonth$.value === 1
-      ? this.selectedMonth$.next(this.selectedMonth$.value + 11)
-      : this.selectedMonth$.next(this.selectedMonth$.value - 1);
-
-    this.selectedMonth$.value === 1
-      ? this.selectedYear$.next(this.selectedYear$.value - 1)
-      : this.selectedYear$.value;
+    this.service.prev();
   }
 
   next(): void {
-    this.selectedMonth$.value === 12
-      ? this.selectedMonth$.next(this.selectedMonth$.value - 11)
-      : this.selectedMonth$.next(this.selectedMonth$.value + 1);
+    this.service.nextDate();
+  }
 
-    this.selectedMonth$.value === 1
-      ? this.selectedYear$.next(this.selectedYear$.value + 1)
-      : this.selectedYear$.value;
-    this.selectedDay$.next(this.selectedDay$.value + 1);
+  constructor(
+    private service: CalendarService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    this.service.currentDate$.subscribe(e => console.log(e));
   }
 
   ngOnInit(): void {
     console.log(this.currentDate, this.currentMonth);
-    console.log(this.selectedDay$.value);
   }
 
-  getDay(day: number | string): void {
-    this.divDay = day;
+  setDay(day: '' | CalendarDate): void {
+    if (day instanceof CalendarDate) {
+      this.router.navigate([], {
+        queryParams: {
+          day: day.day
+        }, queryParamsHandling: 'merge'
+      });
+    }
   }
+
   clearDate(): void {
-    this.divDay = '';
+    this.router.navigate([], {
+      queryParams: {
+        day: null
+      }
+    });
   }
+
   add(): void {
     this.isActive = false;
   }
@@ -104,14 +95,14 @@ export class CalendarComponent implements OnInit {
       `${this.divDay.toString()}.${this.selectedMonth$.value.toString()}.${this.selectedYear$.value.toString()}`
     )
       ? data
-          .get(
-            `${this.divDay.toString()}.${this.selectedMonth$.value.toString()}.${this.selectedYear$.value.toString()}`
-          )
-          ?.push(text)
+        .get(
+          `${this.divDay.toString()}.${this.selectedMonth$.value.toString()}.${this.selectedYear$.value.toString()}`
+        )
+        ?.push(text)
       : data.set(
-          `${this.divDay.toString()}.${this.selectedMonth$.value.toString()}.${this.selectedYear$.value.toString()}`,
-          [text]
-        );
+        `${this.divDay.toString()}.${this.selectedMonth$.value.toString()}.${this.selectedYear$.value.toString()}`,
+        [text]
+      );
     console.log(data.keys());
     this.data$.next(data);
   }
