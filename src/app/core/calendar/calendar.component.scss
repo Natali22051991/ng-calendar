@@ -1,0 +1,36 @@
+.day:hover{
+    background-color: rgb(211, 211, 211);
+}
+.data{
+    text-transform:capitalize;
+}
+.comments {
+    display: flex;
+    flex-direction:column ;
+    gap: 5px;
+}
+.addBtn span:not(:last-child){
+padding: 0 5px 0 0;
+}
+
+.divDay {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    background-color:#f5f5f5;
+}
+
+.divDay span{
+color: rgba(0,0,0,.87);;
+font: 500 20px/32px Roboto, "Helvetica Neue", sans-serif;
+
+}
+
+.text{
+    display: none;
+}
+.textarea{
+    display: flex;
+    flex-direction: column; 
+}
