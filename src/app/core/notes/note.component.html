@@ -1,0 +1,27 @@
+<div *ngIf="selectedDay$ | async" class="comments">
+    <div class="divDay">
+      <p><span>{{(selectedDate$ | async)!.fullDate}}</span><br> ipsum dolor sit amet consectetur adipisicing elit. Quia
+        neque cumque quisquam esse dicta, repellendus itaque ipsa? Aliquam, vitae quas modi inventore ipsa nam soluta
+        iure, dolorum dolor dolorem non.</p>
+      <button (click)="clearDate()" mat-mini-fab color="primary">
+        <mat-icon>
+          clear
+        </mat-icon>
+      </button>
+    </div>
+    <div class="addBtn">
+      <span>Добавить заметку</span>
+      <button (click)="add()">+
+      </button>
+    </div>
+    <div class="text" [class.text]="isActive">
+      <div class="textarea">
+        <textarea type="text" name="text" #text></textarea>
+        <button mat-icon-button color="primary" type="button" (click)="saveSubmit(text.value)">сохранить</button>
+      </div>
+    </div>
+    <span
+      *ngFor="let dateText of (data$ | async)!.get(''+divDay+'.'+selectedMonth$.value+'.'+selectedYear$.value)">{{dateText}}</span>
+  </div>
+  
+  

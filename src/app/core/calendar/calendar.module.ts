@@ -6,11 +6,17 @@ import { RouterModule, Routes } from '@angular/router';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { NoteComponent } from '../notes/note.component';
 
-const routes: Routes = [{ path: '', component: CalendarComponent }];
+const routes: Routes = [
+  {
+    path: '',
+    component: CalendarComponent,
+  },
+];
 
 @NgModule({
-  declarations: [CalendarComponent],
+  declarations: [CalendarComponent, NoteComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
