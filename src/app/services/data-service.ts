@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { CalendarDate } from '../common/calendar-date';
 import { CalendarService } from './calendar.service';
 
