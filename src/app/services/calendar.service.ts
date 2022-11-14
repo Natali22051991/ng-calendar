@@ -5,21 +5,26 @@ import { CalendarDate } from '../common/calendar-date';
 import { DestroyService } from '../common/destroy';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CalendarService extends DestroyService {
-
   currentDate$ = of(new Date());
   currentDate = new Date();
 
   public selectedDay$ = this._route.queryParams.pipe(
-    map(params => params['day'] ?? null)
+    map((params) => params['day'] ?? null)
   );
 
   selectedMonth$ = new BehaviorSubject(this.currentDate.getMonth() + 1);
   selectedYear$ = new BehaviorSubject(this.currentDate.getFullYear());
-  public selectedDate$ = combineLatest([this.selectedYear$, this.selectedMonth$, this.selectedDay$]).pipe(
-    map(([year, month, day]) => !day ? null : new CalendarDate(new Date(`${year}-${month}-${day}`)) )
+  public selectedDate$ = combineLatest([
+    this.selectedYear$,
+    this.selectedMonth$,
+    this.selectedDay$,
+  ]).pipe(
+    map(([year, month, day]) =>
+      !day ? null : new CalendarDate(new Date(`${year}-${month}-${day}`))
+    )
   );
   viewDate$ = combineLatest([this.selectedMonth$, this.selectedYear$]).pipe(
     map(([m, y]) => {
@@ -38,20 +43,22 @@ export class CalendarService extends DestroyService {
     private readonly _route: ActivatedRoute
   ) {
     super();
-    combineLatest([this.selectedYear$, this.selectedMonth$, this.selectedDay$]).pipe(
-      map(([year, month, day]) => {
-        const result = {year, month};
-        if (day) {
-          Object.assign(result, {day})
-        }
-        return result;
-      }),
-      takeUntil(this)
-    ).subscribe(date => {
-      this._router.navigate([], {
-        queryParams: date
-      })
-    })
+    combineLatest([this.selectedYear$, this.selectedMonth$, this.selectedDay$])
+      .pipe(
+        map(([year, month, day]) => {
+          const result = { year, month };
+          if (day) {
+            Object.assign(result, { day });
+          }
+          return result;
+        }),
+        takeUntil(this)
+      )
+      .subscribe((date) => {
+        this._router.navigate([], {
+          queryParams: date,
+        });
+      });
   }
 
   nextDate(): void {
