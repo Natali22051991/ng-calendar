@@ -42,18 +42,4 @@ export class NoteComponent {
     this.isActive = true;
     this.dataServise.saveSubmit(text);
   }
-
-  // setDay(day: '' | CalendarDate): void {
-  //   if (day instanceof CalendarDate) {
-  //     this.router.navigate([], {
-  //       queryParams: {
-  //         day: day.day,
-  //       },
-  //       queryParamsHandling: 'merge',
-  //     });
-
-  //     console.log(day);
-  //   }
-  //   this.dayData = day.toString();
-  // }
 }
