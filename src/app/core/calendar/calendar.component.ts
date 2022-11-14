@@ -3,6 +3,7 @@ import { BehaviorSubject, map, Observable } from 'rxjs';
 import { CalendarService } from '../../services/calendar.service';
 import { CalendarDate } from '../../common/calendar-date';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DataService } from 'src/app/services/data-service';
 
 @Component({
   selector: 'app-calendar',
@@ -24,7 +25,7 @@ export class CalendarComponent implements OnInit {
   divDay!: string | number;
   isActive: boolean = true;
   text: string = '';
-  dayData!: string[];
+  dayData!: string | number;
 
   public selectedMonth$ = this.service.selectedMonth$;
   public selectedYear$ = this.service.selectedYear$;
@@ -60,8 +61,9 @@ export class CalendarComponent implements OnInit {
 
   constructor(
     private service: CalendarService,
-    private router: Router,
-    private route: ActivatedRoute
+    private dataService: DataService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.service.currentDate$.subscribe((e) => console.log(e));
   }
@@ -71,13 +73,12 @@ export class CalendarComponent implements OnInit {
   }
 
   setDay(day: '' | CalendarDate): void {
-    if (day instanceof CalendarDate) {
-      this.router.navigate([], {
-        queryParams: {
-          day: day.day,
-        },
-        queryParamsHandling: 'merge',
-      });
-    }
+    console.log(day);
+
+    this.dataService.setDay(day);
+  }
+
+  saveSubmit(text: string) {
+    this.dataService.saveSubmit(text);
   }
 }

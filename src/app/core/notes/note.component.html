@@ -21,7 +21,7 @@
       </div>
     </div>
     <span
-      *ngFor="let dateText of (data$ | async)!.get(''+divDay+'.'+selectedMonth$.value+'.'+selectedYear$.value)">{{dateText}}</span>
+      *ngFor="let dateText of (data$ | async)!.get(''+dayData+'.'+selectedMonth$.value+'.'+selectedYear$.value)">{{dateText}}</span>
   </div>
   
   

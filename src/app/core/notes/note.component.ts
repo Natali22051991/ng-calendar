@@ -11,7 +11,7 @@ import { DataService } from 'src/app/services/data-service';
 export class NoteComponent {
   isActive: boolean = true;
   text: string = '';
-  dayData!: string[];
+  dayData!: string | number;
 
   constructor(
     private service: CalendarService,
@@ -19,7 +19,6 @@ export class NoteComponent {
     private dataServise: DataService
   ) {}
 
-  public divDay = this.dataServise.divDay;
   public selectedDay$ = this.service.selectedDate$;
   public selectedMonth$ = this.service.selectedMonth$;
   public selectedYear$ = this.service.selectedYear$;
@@ -32,6 +31,7 @@ export class NoteComponent {
         day: null,
       },
     });
+    console.log(this.router);
   }
 
   add(): void {
@@ -42,4 +42,18 @@ export class NoteComponent {
     this.isActive = true;
     this.dataServise.saveSubmit(text);
   }
+
+  // setDay(day: '' | CalendarDate): void {
+  //   if (day instanceof CalendarDate) {
+  //     this.router.navigate([], {
+  //       queryParams: {
+  //         day: day.day,
+  //       },
+  //       queryParamsHandling: 'merge',
+  //     });
+
+  //     console.log(day);
+  //   }
+  //   this.dayData = day.toString();
+  // }
 }
