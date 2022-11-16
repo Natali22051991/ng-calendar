@@ -20,8 +20,8 @@
         <button mat-icon-button color="primary" type="button" (click)="saveSubmit(text.value)">сохранить</button>
       </div>
     </div>
-    <span
-      *ngFor="let dateText of (data$ | async)!.get(''+dayData+'.'+selectedMonth$.value+'.'+selectedYear$.value)">{{dateText}}</span>
+    
+    <div *ngFor="let dateText of (data$ | async)">
+    <span >{{dateText}}</span>
   </div>
-  
-  
+</div>

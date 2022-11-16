@@ -16,11 +16,14 @@ export class CalendarDate {
   }
 
   get dayInWeek(): string {
-    return CalendarDate.getFullDateString(this.currentDate)
+    return CalendarDate.getFullDateString(this.currentDate);
   }
 
   get fullDate(): string {
-    return CalendarDate.getFullDateString(this.currentDate)
+    return CalendarDate.getFullDateString(this.currentDate);
+  }
+  get date(): string {
+    return CalendarDate.getShorftDateString(this.currentDate);
   }
 
   constructor(date: Date) {
@@ -30,16 +33,24 @@ export class CalendarDate {
   public static getMonthYearString(date: Date): string {
     return new Intl.DateTimeFormat('ru-RU', {
       month: 'long',
-      year: 'numeric'
-    }).format(date)
+      year: 'numeric',
+    }).format(date);
   }
 
   public static getFullDateString(date: Date): string {
     return new Intl.DateTimeFormat('ru-RU', {
       day: '2-digit',
       month: 'long',
-      year: 'numeric'
-    }).format(date)
+      year: 'numeric',
+    }).format(date);
+  }
+
+  public static getShorftDateString(date: Date): string {
+    return new Intl.DateTimeFormat('ru-RU', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(date);
   }
 
   public static getDaysInMonth(year: number, month: number): number {
@@ -51,17 +62,19 @@ export class CalendarDate {
     return result === 0 ? 7 : result;
   }
 
-  public static getCalendarMonth(year: number, month: number): (number | "")[] {
+  public static getCalendarMonth(year: number, month: number): (number | '')[] {
     const days = CalendarDate.getDaysInMonth(year, month);
     const day = CalendarDate.getFirstDayOfMonth(year, month);
     return new Array(42)
       .fill('')
-      .map((el, i) => i + 1 < day ? '' : i > days + day - 2 ? '' : i + 2 - day);
+      .map((el, i) =>
+        i + 1 < day ? '' : i > days + day - 2 ? '' : i + 2 - day
+      );
   }
 
   public week(weekday: StringDateFormat | undefined = 'long'): string {
     return new Intl.DateTimeFormat('ru-RU', {
-      weekday
+      weekday,
     }).format();
   }
 }

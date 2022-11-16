@@ -7,6 +7,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { NoteComponent } from '../notes/note.component';
+import { ShortDayComponent } from '../short-day/short-day.component';
 
 const routes: Routes = [
   {
@@ -16,7 +17,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [CalendarComponent, NoteComponent],
+  declarations: [CalendarComponent, NoteComponent, ShortDayComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
