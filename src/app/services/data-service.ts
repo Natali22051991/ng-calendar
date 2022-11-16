@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
+import { BehaviorSubject, tap } from 'rxjs';
 import { CalendarDate } from '../common/calendar-date';
 import { CalendarService } from './calendar.service';
 
@@ -9,53 +9,51 @@ import { CalendarService } from './calendar.service';
 })
 export class DataService {
   dayData!: string | number;
+  key!: string;
   constructor(
     private calendarService: CalendarService,
-    private route: ActivatedRoute,
     private router: Router
   ) {}
+  public selectedDay$ = this.calendarService.selectedDate$.pipe(
+    tap((d) => (this.dayData = d!.day))
+  );
   public data$ = new BehaviorSubject(new Map<string, string[]>());
 
   public selectedMonth$ = this.calendarService.selectedMonth$;
   public selectedYear$ = this.calendarService.selectedYear$;
 
   setDay(day: '' | CalendarDate): void {
-    if (day instanceof CalendarDate) {
+    if (day === '') {
+      this.router.navigate([], {
+        queryParams: {
+          day: '',
+        },
+        queryParamsHandling: 'merge',
+      });
+    } else {
       this.router.navigate([], {
         queryParams: {
           day: day.day,
         },
         queryParamsHandling: 'merge',
       });
-
-      console.log(day);
+      this.dayData = day.date;
     }
-    this.dayData = day.toString();
-    console.log(this.dayData);
   }
 
-  saveSubmit(text: string) {
-    const data = this.data$.value;
-    data.has(
-      `${
-        this.dayData
-      }.${this.selectedMonth$.value.toString()}.${this.selectedYear$.value.toString()}`
-    )
-      ? data
-          .get(
-            `${
-              this.dayData
-            }.${this.selectedMonth$.value.toString()}.${this.selectedYear$.value.toString()}`
-          )
-          ?.push(text)
-      : data.set(
-          `${
-            this.dayData
-          }.${this.selectedMonth$.value.toString()}.${this.selectedYear$.value.toString()}`,
-          [text]
-        );
-    console.log(data);
+  saveSubmit(text: string, key: string) {
+    console.log(key);
 
+    const data = this.data$.value;
+
+    const _key = key
+      ? key
+      : `${
+          this.dayData
+        }.${this.selectedMonth$.value.toString()}.${this.selectedYear$.value.toString()}`;
+    console.log(this.dayData);
+    data.has(_key) ? data.get(_key)!.push(text) : data.set(_key, [text]);
+    console.log(data);
     this.data$.next(data);
   }
 }

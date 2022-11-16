@@ -43,6 +43,7 @@ export class CalendarService extends DestroyService {
     private readonly _route: ActivatedRoute
   ) {
     super();
+
     combineLatest([this.selectedYear$, this.selectedMonth$, this.selectedDay$])
       .pipe(
         map(([year, month, day]) => {

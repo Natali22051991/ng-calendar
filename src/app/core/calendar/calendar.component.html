@@ -11,9 +11,10 @@
 </button>
 
 <mat-grid-list cols="7" rowHeight="2:1">
-  <mat-grid-tile *ngFor="let day of month$|async" (click)="setDay(day)" class="day">
-    <p>{{day === '' ? day : day?.day}}</p></mat-grid-tile>
-</mat-grid-list>
+  <mat-grid-tile  *ngFor="let day of month$|async" (click)="setDay(day)"  class="day">
 
+   <app-short-day [date]="day"  class="w-100" [data]="(data$|async)!" *ngIf="day" ></app-short-day >
+  </mat-grid-tile> 
+</mat-grid-list>
 <app-note></app-note>
 
