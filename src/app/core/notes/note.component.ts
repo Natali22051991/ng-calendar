@@ -7,7 +7,7 @@ import { DataService } from 'src/app/services/data-service';
 @Component({
   selector: 'app-note',
   templateUrl: './note.component.html',
-  styleUrls: ['./note.component.scss'],
+  styleUrls: ['./note.component.scss']
 })
 export class NoteComponent {
   isActive: boolean = true;
@@ -16,7 +16,7 @@ export class NoteComponent {
   constructor(
     private service: CalendarService,
     private router: Router,
-    private dataServise: DataService
+    private dataService: DataService
   ) {
     console.log(this.selectedDate$);
   }
@@ -24,8 +24,8 @@ export class NoteComponent {
   public selectedDay$ = this.service.selectedDate$;
   public selectedDate$ = this.service.selectedDate$;
   public data$ = combineLatest([
-    this.dataServise.data$.pipe(tap((e) => console.log(e))),
-    this.selectedDay$,
+    this.dataService.data$.pipe(tap((e) => console.log(e))),
+    this.selectedDay$
   ]).pipe(
     map(([data, d]) => {
       if (d === null) {
@@ -38,10 +38,9 @@ export class NoteComponent {
   clearDate(): void {
     this.router.navigate([], {
       queryParams: {
-        day: null,
-      },
+        day: null
+      }
     });
-    console.log(this.router);
   }
 
   add(): void {
@@ -50,11 +49,9 @@ export class NoteComponent {
 
   saveSubmit(text: string) {
     this.isActive = true;
-    this.dataServise.selectedDay$
-      .pipe(
-        map((d) => d!.date),
-        first()
-      )
-      .subscribe((key: string) => this.dataServise.saveSubmit(text, key));
+    this.service.selectedDate$.pipe(
+      map((d) => d!.date),
+      first()
+    ).subscribe((key: string) => this.dataService.saveSubmit(text, key));
   }
 }

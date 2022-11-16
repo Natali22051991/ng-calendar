@@ -1,20 +1,23 @@
-<button (click)="prev()" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
+<button (click)="changeMonth(false)" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
   <mat-icon>
     chevron_left
   </mat-icon>
 </button>
 <span class="data">{{ viewDate$|async}} </span>
-<button (click)="next()" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
+<button (click)="changeMonth()" mat-icon-button color="primary" aria-label="Example icon button with a home icon">
   <mat-icon>
     chevron_right
   </mat-icon>
 </button>
 
 <mat-grid-list cols="7" rowHeight="2:1">
-  <mat-grid-tile  *ngFor="let day of month$|async" (click)="setDay(day)"  class="day">
-
-   <app-short-day [date]="day"  class="w-100" [data]="(data$|async)!" *ngIf="day" ></app-short-day >
-  </mat-grid-tile> 
+  <mat-grid-tile *ngFor="let day of listDaysOfSelectedMonth$|async" class="day">
+    <app-short-day
+      *ngIf="day"
+      [date]="day!"
+      [data]="(data$|async)!"
+      (click)="setDetailedDay(day)"></app-short-day>
+  </mat-grid-tile>
 </mat-grid-list>
 <app-note></app-note>
 

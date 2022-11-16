@@ -3,6 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'calendar'
+  },
+  {
     path: 'calendar',
     loadChildren: () =>
       import('./pages/calendar-page/calendar-page.module').then(
