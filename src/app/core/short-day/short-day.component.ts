@@ -12,6 +12,7 @@ import {
 import { CalendarDate } from 'src/app/common/calendar-date';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { DataService } from 'src/app/services/data-service';
+import { calendar } from '../../models/calendar';
 
 @Component({
   selector: 'app-short-day',
@@ -20,7 +21,7 @@ import { DataService } from 'src/app/services/data-service';
 })
 export class ShortDayComponent implements OnInit {
   @Input('date') date!: CalendarDate;
-  @Input('data') data!: Map<string, string[]>;
+  @Input('data') data!: Map<string, calendar.task.Type[]>;
 
   get tasks() {
     return this.data.get(this.date.date);
