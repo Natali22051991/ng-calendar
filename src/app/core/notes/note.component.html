@@ -15,12 +15,22 @@
       </button>
     </div>
     <div class="text" [class.text]="isActive">
-      <div class="textarea">
-        <textarea type="text" name="text" #text></textarea>
-        <button mat-icon-button color="primary" type="button" (click)="saveSubmit(text.value)">сохранить</button>
-      </div>
+<!--      <div class="textarea">-->
+<!--        <textarea type="text" name="text" #text></textarea>-->
+<!--        <button mat-icon-button color="primary" type="button" (click)="saveSubmit(text.value)">сохранить</button>-->
+<!--      </div>-->
+      <form [formGroup]="form">
+        <mat-form-field appearance="fill">
+          <mat-label>Выберите тип</mat-label>
+          <mat-select formControlName="type">
+            <mat-option *ngFor="let type of types" [value]="type.key">
+              {{type.value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
     </div>
-    
+
     <div *ngFor="let dateText of (data$ | async)">
     <span >{{dateText}}</span>
   </div>
