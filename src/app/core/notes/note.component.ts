@@ -1,23 +1,29 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, Input } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { combineLatest, first, map, tap } from 'rxjs';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { DataService } from 'src/app/services/data-service';
 import { KeyValue } from '@angular/common';
 import { TypeTask } from '../../models/type-task';
+import { Shifts } from 'src/app/models/shifts';
 
 @Component({
   selector: 'app-note',
   templateUrl: './note.component.html',
-  styleUrls: ['./note.component.scss']
+  styleUrls: ['./note.component.scss'],
 })
 export class NoteComponent {
   isActive: boolean = true;
+
   text: string = '';
-
+  value = '';
   public form!: FormGroup;
-
   constructor(
     private service: CalendarService,
     private router: Router,
@@ -25,28 +31,109 @@ export class NoteComponent {
     private _fb: FormBuilder
   ) {
     this.form = this._fb.group({
-      type: ''
-    })
+      type: '',
+    });
     // подписка на изменения поля выбора типов
     this.form.controls['type'].valueChanges.subscribe((data: TypeTask) => {
       // здесь описать логику смены полей при изменении типа
       console.log(data);
-      /*
-      this.form.addControl(...)
+      /**
+       * контроллы для заметки
        */
-      // также не забывать удалять поля при смене типа
-      /*
-      this.form.removeControl(...)
-      */
+      this.form.controls['type'].value === 'note'
+        ? this.form.addControl(
+            'titleNote',
+            this._fb.control('', [Validators.required])
+          )
+        : this.form.removeControl('titleNote');
+      this.form.controls['type'].value === 'note'
+        ? this.form.addControl(
+            'note',
+            this._fb.control('', [Validators.required])
+          )
+        : this.form.removeControl('note');
+      /**
+       * контроллы для задачи
+       */
+      this.form.controls['type'].value === 'task'
+        ? this.form.addControl(
+            'titleTask',
+            this._fb.control('', [Validators.required])
+          )
+        : this.form.removeControl('titleTask');
+
+      this.form.controls['type'].value === 'task'
+        ? this.form.addControl(
+            'task',
+            this._fb.control('', [Validators.required])
+          )
+        : this.form.removeControl('task');
+      this.form.controls['type'].value === 'task'
+        ? this.form.addControl(
+            'targetDate',
+            this._fb.control('', [Validators.required])
+          )
+        : this.form.removeControl('targetDate');
+
+      /**
+       * контроллы для события
+       */
+
+      this.form.controls['type'].value === 'event'
+        ? this.form.addControl(
+            'titleEvent',
+            this._fb.control('', [Validators.required])
+          )
+        : this.form.removeControl('titleEvent');
+
+      this.form.controls['type'].value === 'event'
+        ? this.form.addControl(
+            'event',
+            this._fb.control('', [Validators.required])
+          )
+        : this.form.removeControl('event');
+
+      this.form.controls['type'].value === 'event'
+        ? this.form.addControl(
+            'targetDateEvent',
+            this._fb.control('', [Validators.required])
+          )
+        : this.form.removeControl('targetDateEvent');
+      /**
+       * контроллы для смены
+       */
+      this.form.controls['type'].value === 'working-shift'
+        ? this.form.addControl(
+            'targetDateWorkingShift',
+            this._fb.control('', [Validators.required])
+          )
+        : this.form.removeControl('targetDateWorkingShift');
+      this.form.controls['type'].value === 'working-shift'
+        ? this.form.addControl(
+            'titleWorkingShift',
+            this._fb.control('', [Validators.required])
+          )
+        : this.form.removeControl('titleWorkingShift');
+      this.form.controls['type'].value === 'working-shift'
+        ? this.form.addControl(
+            'working-shift',
+            this._fb.control('', [Validators.required])
+          )
+        : this.form.removeControl('working-shift');
     });
+
     console.log(this.selectedDate$);
   }
+
+  /**
+   * targetDate
+   */
 
   public selectedDay$ = this.service.selectedDate$;
   public selectedDate$ = this.service.selectedDate$;
   public data$ = combineLatest([
     this.dataService.data$.pipe(tap((e) => console.log(e))),
-    this.selectedDay$
+    this.selectedDay$,
   ]).pipe(
     map(([data, d]) => {
       if (d === null) {
@@ -55,39 +142,60 @@ export class NoteComponent {
       return data.get(d!.date);
     })
   );
-  types: KeyValue<TypeTask, string>[] = [{
-    key: TypeTask.note,
-    value: 'Заметка'
-  }, {
-    key: TypeTask.task,
-    value: 'Задача'
-  }, {
-    key: TypeTask.event,
-    value: 'Событие'
-  }, {
-    key: TypeTask.workingShift,
-    value: 'Рабочая смена'
-  }];
+  types: KeyValue<TypeTask, string>[] = [
+    {
+      key: TypeTask.note,
+      value: 'Заметка',
+    },
+    {
+      key: TypeTask.task,
+      value: 'Задача',
+    },
+    {
+      key: TypeTask.event,
+      value: 'Событие',
+    },
+    {
+      key: TypeTask.workingShift,
+      value: 'Рабочая смена',
+    },
+  ];
+
+  shifts: KeyValue<string, string>[] = [
+    {
+      key: Shifts.fiveInTwo,
+      value: '5/2',
+    },
+    {
+      key: Shifts.fourInTwo,
+      value: '4/2',
+    },
+    {
+      key: Shifts.threeInTwo,
+      value: '3/2',
+    },
+    {
+      key: Shifts.twoInTwo,
+      value: '2/2',
+    },
+    {
+      key: Shifts.setManually,
+      value: 'выставить вручную',
+    },
+  ];
 
   clearDate(): void {
     this.router.navigate([], {
       queryParams: {
-        day: null
-      }
+        day: null,
+      },
     });
   }
 
   add(): void {
     this.isActive = false;
   }
-
-  saveSubmit(text: string) {
-    this.isActive = true;
-    this.service.selectedDate$.pipe(
-      map((d) => d!.date),
-      first()
-    ).subscribe((key: string) => {
-      /*this.dataService.createTask(text, key)*/
-    });
+  onSubmit() {
+    console.log(this.form.value);
   }
 }

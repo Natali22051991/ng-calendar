@@ -10,17 +10,13 @@
       </button>
     </div>
     <div class="addBtn">
-      <span>Добавить заметку</span>
+      <span>Добавить задание</span>
       <button (click)="add()">+
       </button>
     </div>
     <div class="text" [class.text]="isActive">
-<!--      <div class="textarea">-->
-<!--        <textarea type="text" name="text" #text></textarea>-->
-<!--        <button mat-icon-button color="primary" type="button" (click)="saveSubmit(text.value)">сохранить</button>-->
-<!--      </div>-->
-      <form [formGroup]="form">
-        <mat-form-field appearance="fill">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="fill" [class.text]="isActive">
           <mat-label>Выберите тип</mat-label>
           <mat-select formControlName="type">
             <mat-option *ngFor="let type of types" [value]="type.key">
@@ -28,6 +24,79 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <div>
+          <mat-form-field *ngIf="form.get('titleNote')" class="isActive" class="example-form-field" [class.text]="isActive">
+            <mat-label>Название заметки</mat-label>
+            <input formControlName="titleNote" type="titleNote" matInput placeholder="">
+          </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field *ngIf="form.get('note')" class="isActive" class="example-form-field" [class.text]="isActive">
+          <mat-label >Добавьте заметку</mat-label>
+          <input formControlName="note"  type="text" matInput placeholder="">
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field *ngIf="form.get('titleTask')" class="isActive" class="example-form-field" [class.text]="isActive">
+          <mat-label>Название задачи</mat-label>
+          <input formControlName="titleTask" type="titleTask" matInput placeholder="">
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field *ngIf="form.get('task')" class="isActive" class="example-form-field" [class.text]="isActive">
+          <mat-label>Добавьте задачу</mat-label>
+          <input formControlName="task" type="text" matInput placeholder="" [(ngModel)]="value">
+        </mat-form-field>
+        <mat-form-field *ngIf="form.get('targetDate')" [class.text]="isActive">
+        <input formControlName="targetDate" matInput [matDatepicker]="picker" placeholder="Дата выполнения" >
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+ 
+    <div>
+      <mat-form-field *ngIf="form.get('titleEvent')" class="isActive" class="example-form-field" [class.text]="isActive">
+        <mat-label>Название события</mat-label>
+        <input formControlName="titleEvent" type="titleEvent" matInput placeholder="">
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field *ngIf="form.get('event')" class="isActive" class="example-form-field" [class.text]="isActive">
+        <mat-label>Добавьте событие</mat-label>
+        <input formControlName="event" type="event" matInput placeholder="">
+      </mat-form-field>
+  
+      <mat-form-field *ngIf="form.get('targetDateEvent')" [class.text]="isActive">
+        <input formControlName="targetDateEvent" matInput [matDatepicker]="picker" placeholder="Добавьте дату" >
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field *ngIf="form.get('titleWorkingShift')" class="isActive" class="example-form-field" [class.text]="isActive">
+        <mat-label>Название смены</mat-label>
+        <input formControlName="titleWorkingShift" type="titleWorkingShift" matInput placeholder="">
+      </mat-form-field>
+    </div>
+    
+      <mat-form-field *ngIf="form.get('working-shift')" appearance="fill" [class.text]="isActive">
+        <mat-label>Выберите смену</mat-label>
+        <mat-select formControlName="working-shift">
+          <mat-option *ngFor="let shift of shifts" [value]="shift.key">
+            {{shift.value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field *ngIf="form.get('targetDateWorkingShift')" [class.text]="isActive">
+        <input formControlName="targetDateWorkingShift" matInput [matDatepicker]="picker" placeholder="Выберете дату начала смены" >
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      
+    <div>
+      <button [disabled]="form.invalid"  type="submit" mat-button color="primary">Сохранить</button>
+    </div>
       </form>
     </div>
 

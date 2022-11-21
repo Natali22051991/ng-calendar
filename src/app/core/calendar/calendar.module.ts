@@ -11,6 +11,10 @@ import { ShortDayComponent } from '../short-day/short-day.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 const routes: Routes = [
   {
@@ -29,7 +33,11 @@ const routes: Routes = [
     MatIconModule,
     MatFormFieldModule,
     MatSelectModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+    MatInputModule,
+    FormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+  ],
 })
 export class CalendarModule {}
