@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { MatSliderModule } from '@angular/material/slider';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ShortDayComponent } from './core/short-day/short-day.component';
+import { IonicModule } from '@ionic/angular';
 
 @NgModule({
   declarations: [AppComponent],
@@ -14,7 +13,7 @@ import { ShortDayComponent } from './core/short-day/short-day.component';
     AppRoutingModule,
     FormsModule,
     BrowserAnimationsModule,
-    MatSliderModule,
+    IonicModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

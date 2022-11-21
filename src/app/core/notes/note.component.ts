@@ -1,12 +1,7 @@
 import { Component, Input } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { combineLatest, first, map, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { DataService } from 'src/app/services/data-service';
 import { KeyValue } from '@angular/common';
@@ -20,10 +15,9 @@ import { Shifts } from 'src/app/models/shifts';
 })
 export class NoteComponent {
   isActive: boolean = true;
-
-  text: string = '';
-  value = '';
+  @Input('info') info!: string;
   public form!: FormGroup;
+  // public info$ = new BehaviorSubject(<string[]>);
   constructor(
     private service: CalendarService,
     private router: Router,
@@ -102,12 +96,7 @@ export class NoteComponent {
       /**
        * контроллы для смены
        */
-      this.form.controls['type'].value === 'working-shift'
-        ? this.form.addControl(
-            'targetDateWorkingShift',
-            this._fb.control('', [Validators.required])
-          )
-        : this.form.removeControl('targetDateWorkingShift');
+
       this.form.controls['type'].value === 'working-shift'
         ? this.form.addControl(
             'titleWorkingShift',
@@ -116,19 +105,26 @@ export class NoteComponent {
         : this.form.removeControl('titleWorkingShift');
       this.form.controls['type'].value === 'working-shift'
         ? this.form.addControl(
-            'working-shift',
+            'workingShift',
             this._fb.control('', [Validators.required])
           )
-        : this.form.removeControl('working-shift');
+        : this.form.removeControl('workingShift');
+      this.form.controls['type'].value === 'working-shift'
+        ? this.form.addControl(
+            'targetStartTimeWorkingShift',
+            this._fb.control('', [Validators.required])
+          )
+        : this.form.removeControl('targetStartTimeWorkingShift');
+      this.form.controls['type'].value === 'working-shift'
+        ? this.form.addControl(
+            'targetAndTimeWorkingShift',
+            this._fb.control('', [Validators.required])
+          )
+        : this.form.removeControl('targetAndTimeWorkingShift');
     });
 
     console.log(this.selectedDate$);
   }
-
-  /**
-   * targetDate
-   */
-
   public selectedDay$ = this.service.selectedDate$;
   public selectedDate$ = this.service.selectedDate$;
   public data$ = combineLatest([
@@ -164,19 +160,19 @@ export class NoteComponent {
   shifts: KeyValue<string, string>[] = [
     {
       key: Shifts.fiveInTwo,
-      value: '5/2',
+      value: 'График 5/2',
     },
     {
       key: Shifts.fourInTwo,
-      value: '4/2',
+      value: 'График 4/2',
     },
     {
       key: Shifts.threeInTwo,
-      value: '3/2',
+      value: 'График 3/2',
     },
     {
       key: Shifts.twoInTwo,
-      value: '2/2',
+      value: 'График 2/2',
     },
     {
       key: Shifts.setManually,
@@ -187,7 +183,7 @@ export class NoteComponent {
   clearDate(): void {
     this.router.navigate([], {
       queryParams: {
-        day: null,
+        day: '',
       },
     });
   }
@@ -197,5 +193,7 @@ export class NoteComponent {
   }
   onSubmit() {
     console.log(this.form.value);
+    // this.info$.next(this.info$.value);
+    // console.log(this.info$.value);
   }
 }
