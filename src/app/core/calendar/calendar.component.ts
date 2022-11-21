@@ -9,34 +9,39 @@ import { DataService } from 'src/app/services/data-service';
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarComponent implements OnInit {
-
   public data$ = this.dataService.data$;
 
-  public listDaysOfSelectedMonth$: Observable<('' | CalendarDate)[]> = this.route.queryParams.pipe(
+  public listDaysOfSelectedMonth$: Observable<('' | CalendarDate)[]> =
+    this.route.queryParams.pipe(
       map((params) => {
         const month = params['month'];
         const year = params['year'];
-        return CalendarDate.getCalendarMonth(year, month).map(day => day === ''
-          ? day
-          : new CalendarDate(new Date(`${year}-${month}-${day}`)));
+        return CalendarDate.getCalendarMonth(year, month).map((day) =>
+          day === ''
+            ? day
+            : new CalendarDate(new Date(`${year}-${month}-${day}`))
+        );
       })
     );
 
   public viewDate$: Observable<string> = this.route.queryParams.pipe(
-    map((params) => CalendarDate.getMonthYearString(new Date(params['year'], +params['month'] - 1)))
+    map((params) =>
+      CalendarDate.getMonthYearString(
+        new Date(params['year'], +params['month'] - 1)
+      )
+    )
   );
 
   constructor(
     private service: CalendarService,
     private dataService: DataService,
     private route: ActivatedRoute
-  ) { }
+  ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   /** Смена месяца */
   changeMonth(next = true) {
