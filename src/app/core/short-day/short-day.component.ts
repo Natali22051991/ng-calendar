@@ -12,8 +12,6 @@ export class ShortDayComponent implements OnInit {
   @Input('data') data!: Map<string, calendar.task.Type[]>;
 
   get tasks() {
-    console.log(this.date.date);
-
     return this.data.get(this.date.date);
   }
 

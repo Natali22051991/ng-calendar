@@ -183,9 +183,11 @@ export class NoteComponent {
   clearDate(): void {
     this.router.navigate([], {
       queryParams: {
-        day: '',
+        day: null,
       },
+      queryParamsHandling: 'merge',
     });
+    this.service.day = null;
   }
 
   add(): void {
