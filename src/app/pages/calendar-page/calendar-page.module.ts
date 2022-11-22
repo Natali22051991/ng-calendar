@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 import { CalendarPageComponent } from './calendar-page.component';
 import { RouterModule, Routes } from '@angular/router';
-import { MatToolbarModule } from '@angular/material/toolbar';
 
 const routes: Routes = [
   {
@@ -23,6 +23,6 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [CalendarPageComponent],
-  imports: [CommonModule, RouterModule.forChild(routes), MatToolbarModule],
+  imports: [CommonModule, RouterModule.forChild(routes), IonicModule],
 })
 export class CalendarPageModule {}

@@ -1,3 +1,18 @@
-.mat-grid-tile:hover{
-background-color: rgb(240, 238, 238);
+ion-grid {
+  --ion-grid-columns: 7;
+  --ion-grid-padding: 20px;
+  --ion-grid-width: 100%;
+  --ion-grid-width-xs: 100%;
+}
+
+ion-col {
+  border: solid 1px rgb(226, 224, 224);
+  color: rgb(10, 10, 10);
+  height: 50px;
+}
+ion-text{
+  text-align: center;
+}
+span{
+  text-transform:capitalize;
 }

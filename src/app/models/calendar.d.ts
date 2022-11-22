@@ -25,7 +25,7 @@ export namespace calendar {
 
     export interface WorkingShift extends Base {
       shift: Shift;
-      description?: string;
+      description: string;
     }
 
     export interface Shift {

@@ -1,17 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {
-  BehaviorSubject,
-  combineLatest,
-  filter,
-  first,
-  map,
-  Observable,
-  tap,
-} from 'rxjs';
-
 import { CalendarDate } from 'src/app/common/calendar-date';
-import { CalendarService } from 'src/app/services/calendar.service';
-import { DataService } from 'src/app/services/data-service';
 import { calendar } from '../../models/calendar';
 
 @Component({
