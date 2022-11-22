@@ -21,4 +21,19 @@ export class DataService extends DestroyService {
     _data.has(key) ? _data.get(key)!.push(data) : _data.set(key, [data]);
     this.data$.next(_data);
   }
+
+  // onSubmit(text: string, key: string) {
+  //   console.log(key);
+  //   console.log(text);
+
+  //   // const data = this.data$.value;
+
+  //   const _key = key
+  //     ? key
+  //     : `${
+  //         this.dayData
+  //       }.${this.selectedMonth$.value.toString()}.${this.selectedYear$.value.toString()}`;
+  //   console.log(this.dayData);
+  //   data.has(_key) ? data.get(_key)!.push(text) : data.set(_key, [text]);
+  // }
 }

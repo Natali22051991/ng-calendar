@@ -1,6 +1,24 @@
 export enum TypeTask {
   note = 'note',
   task = 'task',
-  workingShift = 'working-shift',
-  event = 'event'
+  shift = 'shift',
+  event = 'event',
+}
+export enum TypeTaskDictionary {
+  note = 'заметки',
+  task = 'задачи',
+  shift = 'графика',
+  event = 'события',
+}
+
+export enum TypeTaskText {
+  note = 'заметку',
+  task = 'задачу',
+  event = 'событие',
+}
+
+export enum TypeTaskTargetDate {
+  task = 'время выполнения',
+  shift = 'время начала смены',
+  event = 'время выполнения',
 }

@@ -8,74 +8,59 @@
 <ion-button fill="clear" (click)="add()"><span>Добавить задание</span><ion-icon name="add-circle"></ion-icon></ion-button>
 <div class="text" [class.text]="isActive">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <ion-item [class.text]="isActive"> 
+      <ion-item> 
         <ion-select formControlName="type" interface="popover" placeholder="Выберете тип">
           <ion-select-option *ngFor="let type of types" [value]="type.key" value="">{{type.value}}</ion-select-option>
         </ion-select>
       </ion-item>
-
-    <ion-item *ngIf="form.get('titleNote')" class="isActive" [class.text]="isActive">
-      <ion-label position="floating">Название заметки</ion-label>
-      <ion-input formControlName="titleNote" type="titleNote" [clearInput]="true" placeholder="Enter text to see clear button" value="Например: подработка"></ion-input>
-    </ion-item>
-    <ion-item *ngIf="form.get('note')" class="isActive" [class.text]="isActive">
-      <ion-label position="floating">Добавьте заметку</ion-label>
-      <ion-input formControlName="note"  type="text" [clearInput]="true" placeholder="Enter text to see clear button" value="Например: подработка"></ion-input>
+     
+    <ion-item *ngIf="form.get('title')" >
+      <ion-label position="floating">{{placeHolderTitle}}</ion-label>
+      <ion-input formControlName="title" type="text" [clearInput]="true" placeholder="Ваш текст:"></ion-input>
     </ion-item>
 
-  
-    <ion-item *ngIf="form.get('titleTask')" class="isActive" [class.text]="isActive">
-      <ion-label position="floating">Название задачи</ion-label>
-      <ion-input formControlName="titleTask" type="titleTask" [clearInput]="true" placeholder="Enter text to see clear button" value="Например: подработка"></ion-input>
-    </ion-item>
-    <ion-item *ngIf="form.get('task')" class="isActive" [class.text]="isActive">
-      <ion-label position="floating">Добавьте задачу</ion-label>
-      <ion-input formControlName="task" type="text" [clearInput]="true" placeholder="Enter text to see clear button" value="Например: подработка"></ion-input>
-    </ion-item>
-    <ion-item *ngIf="form.get('targetDate')" [class.text]="isActive">
-    <span>Выберете время</span>
-    <ion-datetime formControlName="targetDate" presentation="time"></ion-datetime>
+    <ion-item *ngIf="form.get('text')" >
+      <ion-label position="floating">{{placeHolderText}}</ion-label>
+      <ion-input formControlName="text"  type="text" [clearInput]="true" placeholder="Ваш текст:"></ion-input>
     </ion-item>
 
-    <ion-item *ngIf="form.get('titleEvent')" class="isActive" [class.text]="isActive">
-      <ion-label position="floating">Название события</ion-label>
-      <ion-input formControlName="titleEvent" type="titleEvent" [clearInput]="true" placeholder="Enter text to see clear button" value="Например: подработка"></ion-input>
-    </ion-item>
-    <ion-item *ngIf="form.get('event')" class="isActive" [class.text]="isActive">
-      <ion-label position="floating">Добавьте событие</ion-label>
-      <ion-input formControlName="event" type="event" [clearInput]="true" placeholder="Enter text to see clear button" value="Например: подработка"></ion-input>
-    </ion-item>
-    <ion-item *ngIf="form.get('targetDateEvent')"  [class.text]="isActive">
-    <span>Выберете время</span>
-    <ion-datetime formControlName="targetDateEvent" presentation="time"></ion-datetime>
+    <ion-item *ngIf="form.get('eventType')">
+      <ion-label position="floating">Укажите тип события</ion-label>
+      <ion-input formControlName="eventType"  type="text" [clearInput]="true" placeholder="Ваш текст:"></ion-input>
     </ion-item>
 
-    <ion-item *ngIf="form.get('titleWorkingShift')" class="isActive" [class.text]="isActive">
-      <ion-label position="floating">Название смены</ion-label>
-      <ion-input formControlName="titleWorkingShift" type="titleWorkingShift" [clearInput]="true" placeholder="Enter text to see clear button" value="Например: подработка"></ion-input>
+    <ion-item *ngIf="form.get('targetDate')">
+      <span>{{placeHolderTargetDate}}</span>
+      <ion-datetime formControlName="targetDate" presentation="time"></ion-datetime>
     </ion-item>
-   
-      <ion-item [class.text]="isActive">
-        
-        <ion-select formControlName="workingShift" *ngIf="form.get('workingShift')" interface="popover" placeholder="Выберете график">
-          <ion-select-option *ngFor="let shift of shifts" [value]="shift.key" value="">{{shift.value}}</ion-select-option>
-        </ion-select>
-      </ion-item>
-      
-    <ion-item *ngIf="form.get('targetStartTimeWorkingShift')"  [class.text]="isActive">
-      <span>Укажите начало смены</span>
-      <ion-datetime formControlName="targetStartTimeWorkingShift" presentation="time"></ion-datetime>
+
+    <ion-item>
+      <ion-select formControlName="description" *ngIf="form.get('description')" interface="popover" placeholder="Выберете график">
+        <ion-select-option *ngFor="let shift of shifts" [value]="shift.key" value="">{{shift.value}}</ion-select-option>
+      </ion-select>
     </ion-item>
-    <ion-item *ngIf="form.get('targetAndTimeWorkingShift')"  [class.text]="isActive">
-      <span>Укажите конец смены</span>
-      <ion-datetime formControlName="targetAndTimeWorkingShift" presentation="time"></ion-datetime>
+
+    <ion-item *ngIf="form.get('start')">
+      <span>Укажите время начала смены</span>
+      <ion-datetime formControlName="start" presentation="time"></ion-datetime>
     </ion-item>
-   
+
+    <ion-item *ngIf="form.get('duration')">
+      <ion-label position="floating">Укажите кол-во ч смены</ion-label>
+      <ion-input formControlName="duration" type="number" [clearInput]="true" placeholder="00:00" ></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="form.get('hourlyRate')" >
+      <ion-label position="floating">Укажите почасовую ставку руб</ion-label>
+      <ion-input formControlName="hourlyRate" type="number" [clearInput]="true" placeholder="00:00" ></ion-input>
+    </ion-item>
+
     <ion-button  fill="clear" [disabled]="form.invalid"  type="submit">Сохранить</ion-button>
+
   </form>
-  <div *ngFor="let dateText of (data$ | async)">
+  <!-- <div *ngFor="let dateText of (data$ | async)">
     <span >{{dateText}}</span>
-  </div>
+  </div> -->
 </div>
 </ion-content>
 

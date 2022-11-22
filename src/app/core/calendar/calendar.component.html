@@ -1,10 +1,12 @@
+<div class="data">
 <ion-button fill="clear" (click)="changeMonth(false)"
   ><ion-icon name="chevron-back-outline"></ion-icon
 ></ion-button>
-<b>{{ viewDate$ | async }}</b>
+<ion-text><span>{{ viewDate$ | async }}</span></ion-text>
 <ion-button fill="clear" (click)="changeMonth()"
   ><ion-icon name="chevron-forward-outline"></ion-icon
 ></ion-button>
+</div>
 <ion-grid [fixed]="true">
   <ion-row class="day">
     <ion-col *ngFor="let day of listDaysOfSelectedMonth$ | async" size="1">
