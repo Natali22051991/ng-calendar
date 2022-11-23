@@ -8,12 +8,12 @@
 <ion-button fill="clear" (click)="add()"><span>Добавить задание</span><ion-icon name="add-circle"></ion-icon></ion-button>
 <div class="text" [class.text]="isActive">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <ion-item> 
+      <ion-item>
         <ion-select formControlName="type" interface="popover" placeholder="Выберете тип">
           <ion-select-option *ngFor="let type of types" [value]="type.key" value="">{{type.value}}</ion-select-option>
         </ion-select>
       </ion-item>
-     
+
     <ion-item *ngIf="form.get('title')" >
       <ion-label position="floating">{{placeHolderTitle}}</ion-label>
       <ion-input formControlName="title" type="text" [clearInput]="true" placeholder="Ваш текст:"></ion-input>
@@ -58,6 +58,14 @@
     <ion-button  fill="clear" [disabled]="form.invalid"  type="submit">Сохранить</ion-button>
 
   </form>
+  <app-switch-edit>
+    <app-switch-edit-content>
+      Первый
+    </app-switch-edit-content>
+    <app-switch-edit-content-editor>
+      Второй
+    </app-switch-edit-content-editor>
+  </app-switch-edit>
   <!-- <div *ngFor="let dateText of (data$ | async)">
     <span >{{dateText}}</span>
   </div> -->

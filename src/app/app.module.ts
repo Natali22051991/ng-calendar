@@ -7,15 +7,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IonicModule } from '@ionic/angular';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    BrowserAnimationsModule,
-    IonicModule.forRoot(),
-  ],
-  providers: [],
-  bootstrap: [AppComponent],
+	declarations: [AppComponent],
+	imports: [
+		BrowserModule,
+		AppRoutingModule,
+		FormsModule,
+		BrowserAnimationsModule,
+		IonicModule.forRoot()
+	],
+	providers: [],
+	bootstrap: [AppComponent],
+  exports: [
+
+  ]
 })
 export class AppModule {}

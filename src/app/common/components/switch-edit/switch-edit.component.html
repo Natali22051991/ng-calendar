@@ -1,0 +1,5 @@
+<ng-content></ng-content>
+<ng-container [ngSwitch]="isEdit$ | async">
+  <button *ngSwitchCase="false" (click)="changeState()">Перейти в режим редактирования</button>
+  <button *ngSwitchDefault (click)="changeState(false)">Выйти из режима редактирования</button>
+</ng-container>

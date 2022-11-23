@@ -8,6 +8,7 @@ import { ShortDayComponent } from '../short-day/short-day.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { AppCommonModule } from '../../common/app-common.module';
 
 const routes: Routes = [
   {
@@ -26,6 +27,7 @@ const routes: Routes = [
 
     FormsModule,
     IonicModule,
-  ],
+    AppCommonModule
+  ]
 })
 export class CalendarModule {}
