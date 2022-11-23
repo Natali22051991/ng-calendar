@@ -5,20 +5,20 @@ import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IonicModule } from '@ionic/angular';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
-	declarations: [AppComponent],
-	imports: [
-		BrowserModule,
-		AppRoutingModule,
-		FormsModule,
-		BrowserAnimationsModule,
-		IonicModule.forRoot()
-	],
-	providers: [],
-	bootstrap: [AppComponent],
-  exports: [
-
-  ]
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    IonicModule.forRoot(),
+    CommonModule,
+  ],
+  providers: [],
+  bootstrap: [AppComponent],
+  exports: [],
 })
 export class AppModule {}

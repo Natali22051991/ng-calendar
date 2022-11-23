@@ -20,5 +20,5 @@ export enum TypeTaskText {
 export enum TypeTaskTargetDate {
   task = 'время выполнения',
   shift = 'время начала смены',
-  event = 'время выполнения',
+  event = 'время',
 }

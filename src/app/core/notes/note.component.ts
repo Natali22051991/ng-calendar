@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, first, map, tap } from 'rxjs';
+import { combineLatest, map, Observable, tap } from 'rxjs';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { DataService } from 'src/app/services/data-service';
 import { KeyValue } from '@angular/common';
@@ -25,7 +25,9 @@ import { CalendarShift } from 'src/app/common/calendar-shift';
 })
 export class NoteComponent {
   isActive: boolean = true;
+  isModalOpen = false;
   public form!: FormGroup;
+
   /**
    *получение названия для поля title
    */
@@ -97,7 +99,7 @@ export class NoteComponent {
       ) {
         this.form.addControl(
           'targetDate',
-          this._fb.control('', [Validators.required])
+          this._fb.control('2022-11-23T11:00:00+03:00', [Validators.required])
         );
       }
       /**
@@ -156,6 +158,7 @@ export class NoteComponent {
 
   public selectedDay$ = this.service.selectedDate$;
   public selectedDate$ = this.service.selectedDate$;
+  // :calendar.task.Note|calendar.task.Event |calendar.task.WorkingShift |calendar.task.Task
   public data$ = combineLatest([
     this.dataService.data$.pipe(tap((e) => console.log(e))),
     this.selectedDay$,
@@ -223,9 +226,13 @@ export class NoteComponent {
   add(): void {
     this.isActive = false;
   }
-  onSubmit() {
+
+  setOpen(isOpen: boolean) {
+    this.isModalOpen = isOpen;
+  }
+  onSubmit(date: string) {
     const type = this.form.value.type;
-    let data;
+    let data!: calendar.task.Type;
     if (type === TypeTask.note) {
       data = new CalendarNote(this.form.value);
     } else if (type === TypeTask.task) {
@@ -236,5 +243,6 @@ export class NoteComponent {
       data = new CalendarShift(this.form.value);
     }
     console.log(data);
+    this.dataService.createTask(data, date, type);
   }
 }

@@ -27,7 +27,7 @@ const routes: Routes = [
 
     FormsModule,
     IonicModule,
-    AppCommonModule
-  ]
+    AppCommonModule,
+  ],
 })
 export class CalendarModule {}

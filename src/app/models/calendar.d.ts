@@ -10,6 +10,19 @@ export namespace calendar {
       /** название */
       title: string;
       type: TypeTask;
+
+      text?: string;
+      targetDate?: string;
+      status?: string;
+      shift?: Shift;
+      description?: string;
+      eventType?: string;
+
+      start?: string;
+      end?: string;
+      duration?: string;
+      hourlyRate?: number;
+      amount?: number;
     }
 
     export interface Note extends Base {

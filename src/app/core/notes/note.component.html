@@ -1,38 +1,194 @@
-<ion-content *ngIf="selectedDay$ | async" color="light" class="ion-padding">
+<ion-content *ngIf="selectedDay$ | async as day" color="light" class="ion-padding">
   <div class="divDay">
-  <p><b>{{(selectedDate$ | async)!.fullDate}}</b><br> ipsum dolor sit amet consectetur adipisicing elit. Quia
-    neque cumque quisquam esse dicta, repellendus itaque ipsa? Aliquam, vitae quas modi inventore ipsa nam soluta
-    iure, dolorum dolor dolorem non.</p>
+  <p><b>{{(day)!.fullDate}}</b><br> </p>
   <ion-button fill="clear" (click)="clearDate()"><ion-icon name="close-circle-sharp"></ion-icon></ion-button>
 </div>
-<ion-button fill="clear" (click)="add()"><span>Добавить задание</span><ion-icon name="add-circle"></ion-icon></ion-button>
-<div class="text" [class.text]="isActive">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+<ng-container [ngSwitch]="item.type" *ngFor="let item of data$|async">
+  <ion-list *ngSwitchCase="'note'" class="note">
+    <ion-item-divider color="light">
+      <ion-label>
+        <ion-label><p><b>{{item.type}}</b></p></ion-label>
+      </ion-label>
+    </ion-item-divider>
+    <ion-item-group>
+      <ion-item-divider color="light">
+        <ion-label>
+          <ion-label><p><b>{{item.title}}</b></p></ion-label>
+        </ion-label>
+      </ion-item-divider>
       <ion-item>
+        <ion-label><p>{{' ' + item.text}}</p></ion-label>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+<!--   
+    <div *ngSwitchCase="'note'" class="note">
+    <p>Заметки</p>
+    <p><span>Заголовок:</span>{{' '+ item.title}}</p>
+    <p><span>Описание:</span>{{' ' + item.text}}</p>
+    </div> -->
+    <div *ngSwitchCase="'task'" class="task">
+    <p>Задачи</p>
+    <p><span>Заголовок:</span>{{' '+ item.title}}</p>
+    <p><span>Описание:</span>{{' ' + item.text}}</p>
+    <p><span>Дата выполнения:</span>{{' ' + 'Время: '+ item.targetDate}}</p>
+    </div>
+    <div *ngSwitchCase="'event'" class="event">
+      <p>События</p>
+      <p><span>Заголовок:</span>{{' '+ item.title}}</p>
+      <p><span>Описание:</span>{{' ' + item.text}}</p>
+      <p><span>Тип события:</span>{{' ' + item.eventType}}</p>
+      <p><span>Дата выполнения:</span>{{' дата' +'.'+ 'время:'+ item.targetDate}}</p>
+    </div>
+    <div *ngSwitchCase="'shift'" class="shift">
+      <!-- {{item|json}} -->
+      <p>Рабочий день</p>
+      <p><span>Заголовок:</span>{{' '+ item.title}}</p>
+      <p><span>Описание:</span>{{' ' + item.description}}</p>
+      <p><span>Начало рабочего дня в:</span>{{' ' + item.start}}</p>
+      <p><span>Продолжительность рабочего дня, ч:</span>{{' ' + item.duration}}</p>
+      <p><span>Окончание рабочего дня в:</span></p>
+      <p><span>Почасовая ставка:</span>{{' ' + item.hourlyRate + ' '}}руб/ч</p>
+      <p><span>Зарплата за день:</span></p>
+      <p><span>Зарплата за месяц:</span></p>
+
+    </div>
+
+  </ng-container>
+
+<!-- <ion-button fill="clear" (click)="add()"><span>Добавить задание</span><ion-icon name="add-circle"></ion-icon></ion-button> -->
+<ion-header>
+  <!-- <ion-toolbar>
+    <ion-title>Inline Modal</ion-title>
+  </ion-toolbar> -->
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-button fill="clear" (click)="setOpen(true)"><p>Новое задание</p><ion-icon name="add-circle"></ion-icon></ion-button>
+  <ion-modal [isOpen]="isModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Настройка</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpen(false)">Выход</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-button fill="clear" (click)="add()"><span>Добавить задание</span><ion-icon name="add-circle"></ion-icon></ion-button>
+        <div class="text" [class.text]="isActive">
+          <form [formGroup]="form" (ngSubmit)="onSubmit(day.date)">
+              <ion-item detail="true">
+                <ion-select formControlName="type" interface="popover" placeholder="Выберете тип">
+                  <ion-select-option *ngFor="let type of types" [value]="type.key" value="">{{type.value}}</ion-select-option>
+                </ion-select>
+              </ion-item>
+        
+            <ion-item lines="none" *ngIf="form.get('title')" >
+              <ion-icon slot="start"></ion-icon>
+              <ion-label position="floating">{{placeHolderTitle}}</ion-label>
+              <ion-input formControlName="title" type="text" [clearInput]="true" placeholder="Ваш текст:"></ion-input>
+            </ion-item>
+            
+            <ion-item lines="none" *ngIf="form.get('text')" >
+              <ion-icon slot="start"></ion-icon>
+              <ion-label position="floating">{{placeHolderText}}</ion-label>
+              <ion-input formControlName="text"  type="text" [clearInput]="true" placeholder="Ваш текст:"></ion-input>
+            </ion-item>
+        
+            <ion-item *ngIf="form.get('eventType')">
+              <ion-icon slot="start"></ion-icon>
+              <ion-label position="floating">Укажите тип события</ion-label>
+              <ion-input formControlName="eventType"  type="text" [clearInput]="true" placeholder="Ваш текст:"></ion-input>
+            </ion-item>
+            <app-switch-edit *ngIf="form.get('targetDate')">
+              <app-switch-edit-content>
+              <ion-item lines="none">{{form.get('targetDate')?.value}}</ion-item>
+              
+        
+              </app-switch-edit-content>
+              <app-switch-edit-content-editor >
+                <ion-item lines="none">
+                  <ion-icon slot="start"></ion-icon>
+                  <div class="event">{{placeHolderTargetDate}}</div>
+                  <ion-datetime formControlName="targetDate" presentation="time"></ion-datetime>
+                </ion-item>
+              </app-switch-edit-content-editor>
+            </app-switch-edit>
+         
+        
+            <ion-item>
+              <ion-select formControlName="description" *ngIf="form.get('description')" interface="popover" placeholder="Выберете график">
+                <ion-select-option *ngFor="let shift of shifts" [value]="shift.key" value="">{{shift.value}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+        
+            <ion-item *ngIf="form.get('start')">
+              <span>Укажите время начала смены</span>
+              <ion-datetime formControlName="start" presentation="time"></ion-datetime>
+            </ion-item>
+        
+            <ion-item *ngIf="form.get('duration')">
+              <ion-label position="floating">Укажите кол-во ч смены</ion-label>
+              <ion-input formControlName="duration" type="number" [clearInput]="true" placeholder="00:00" ></ion-input>
+            </ion-item>
+        
+            <ion-item *ngIf="form.get('hourlyRate')" >
+              <ion-label position="floating">Укажите почасовую ставку руб</ion-label>
+              <ion-input formControlName="hourlyRate" type="number" [clearInput]="true" placeholder="00:00" ></ion-input>
+            </ion-item>
+         
+            <ion-button  fill="clear" [disabled]="form.invalid"  type="submit">Сохранить</ion-button>
+          
+          </form>
+         
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>
+<div class="text" [class.text]="isActive">
+  <form [formGroup]="form" (ngSubmit)="onSubmit(day.date)">
+      <ion-item detail="true">
         <ion-select formControlName="type" interface="popover" placeholder="Выберете тип">
           <ion-select-option *ngFor="let type of types" [value]="type.key" value="">{{type.value}}</ion-select-option>
         </ion-select>
       </ion-item>
 
-    <ion-item *ngIf="form.get('title')" >
+    <ion-item lines="none" *ngIf="form.get('title')" >
+      <ion-icon slot="start"></ion-icon>
       <ion-label position="floating">{{placeHolderTitle}}</ion-label>
       <ion-input formControlName="title" type="text" [clearInput]="true" placeholder="Ваш текст:"></ion-input>
     </ion-item>
-
-    <ion-item *ngIf="form.get('text')" >
+    
+    <ion-item lines="none" *ngIf="form.get('text')" >
+      <ion-icon slot="start"></ion-icon>
       <ion-label position="floating">{{placeHolderText}}</ion-label>
       <ion-input formControlName="text"  type="text" [clearInput]="true" placeholder="Ваш текст:"></ion-input>
     </ion-item>
 
     <ion-item *ngIf="form.get('eventType')">
+      <ion-icon slot="start"></ion-icon>
       <ion-label position="floating">Укажите тип события</ion-label>
       <ion-input formControlName="eventType"  type="text" [clearInput]="true" placeholder="Ваш текст:"></ion-input>
     </ion-item>
+    <app-switch-edit *ngIf="form.get('targetDate')">
+      <app-switch-edit-content>
+        <!-- <ion-icon slot="start"></ion-icon>
+        <ion-icon slot="start"></ion-icon> -->
+      <ion-item lines="none">{{form.get('targetDate')?.value}}</ion-item>
+      
 
-    <ion-item *ngIf="form.get('targetDate')">
-      <span>{{placeHolderTargetDate}}</span>
-      <ion-datetime formControlName="targetDate" presentation="time"></ion-datetime>
-    </ion-item>
+      </app-switch-edit-content>
+      <app-switch-edit-content-editor >
+        <ion-item lines="none">
+          <ion-icon slot="start"></ion-icon>
+          <div class="event">{{placeHolderTargetDate}}</div>
+          <ion-datetime formControlName="targetDate" presentation="time"></ion-datetime>
+        </ion-item>
+      </app-switch-edit-content-editor>
+    </app-switch-edit>
+ 
 
     <ion-item>
       <ion-select formControlName="description" *ngIf="form.get('description')" interface="popover" placeholder="Выберете график">
@@ -54,22 +210,13 @@
       <ion-label position="floating">Укажите почасовую ставку руб</ion-label>
       <ion-input formControlName="hourlyRate" type="number" [clearInput]="true" placeholder="00:00" ></ion-input>
     </ion-item>
-
+ 
     <ion-button  fill="clear" [disabled]="form.invalid"  type="submit">Сохранить</ion-button>
-
+  
   </form>
-  <app-switch-edit>
-    <app-switch-edit-content>
-      Первый
-    </app-switch-edit-content>
-    <app-switch-edit-content-editor>
-      Второй
-    </app-switch-edit-content-editor>
-  </app-switch-edit>
-  <!-- <div *ngFor="let dateText of (data$ | async)">
-    <span >{{dateText}}</span>
-  </div> -->
+ 
 </div>
 </ion-content>
+
 
 
