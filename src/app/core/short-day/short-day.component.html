@@ -1,13 +1,8 @@
-
-<span>{{(date$|async)!.day}}</span>
+{{(date$|async)!.day}}
 <ng-container *ngIf="tasks$|async">
-  
-  <div class="badge">
-  <span *ngFor="let type of (tasks$|async)" >
-  <ion-badge *ngIf="type.type === 'note'" color="success">{{(tasks$|async)!.length}}</ion-badge>
-  <ion-badge *ngIf="type.type === 'task'" color="danger">{{(tasks$|async)!.length}}</ion-badge>
-  <ion-badge *ngIf="type.type === 'event'"color="secondary">{{(tasks$|async)!.length}}</ion-badge>
-  <ion-badge *ngIf="type.type === 'shift'"color="warning">{{(tasks$|async)!.length}}</ion-badge>
-  </span>
-</div>
+  <app-badge color="success" [content]="(taskNote$ | async)?.length"></app-badge>
+  <app-badge color="warning" [content]="(taskShift$ | async)?.length"></app-badge>
+  <app-badge color="secondary" [content]="(taskEvent$ | async)?.length"></app-badge>
+  <app-badge color="danger" [content]="(taskTask$ | async)?.length"></app-badge>
 </ng-container>
+

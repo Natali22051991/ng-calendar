@@ -14,9 +14,6 @@ export class CalendarDate {
   get day(): number {
     return this.currentDate.getDate();
   }
-  get hourse(): number {
-    return this.currentDate.getHours();
-  }
 
   get dayInWeek(): string {
     return CalendarDate.getFullDateString(this.currentDate);
@@ -25,6 +22,7 @@ export class CalendarDate {
   get fullDate(): string {
     return CalendarDate.getFullDateString(this.currentDate);
   }
+
   get date(): string {
     return CalendarDate.getShorftDateString(this.currentDate);
   }
@@ -36,7 +34,7 @@ export class CalendarDate {
   public static getMonthYearString(date: Date): string {
     return new Intl.DateTimeFormat('ru-RU', {
       month: 'long',
-      year: 'numeric',
+      year: 'numeric'
     }).format(date);
   }
 
@@ -44,7 +42,7 @@ export class CalendarDate {
     return new Intl.DateTimeFormat('ru-RU', {
       day: '2-digit',
       month: 'long',
-      year: 'numeric',
+      year: 'numeric'
     }).format(date);
   }
 
@@ -52,7 +50,7 @@ export class CalendarDate {
     return new Intl.DateTimeFormat('ru-RU', {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric',
+      year: 'numeric'
     }).format(date);
   }
 
@@ -62,7 +60,9 @@ export class CalendarDate {
 
   public static getFirstDayOfMonth(year: number, month: number): number {
     const result = new Date(year, month - 1, 1).getDay();
-    return result === 0 ? 7 : result;
+    return result === 0
+      ? 7
+      : result;
   }
 
   public static getCalendarMonth(year: number, month: number): (number | '')[] {
@@ -71,13 +71,24 @@ export class CalendarDate {
     return new Array(42)
       .fill('')
       .map((el, i) =>
-        i + 1 < day ? '' : i > days + day - 2 ? '' : i + 2 - day
+        i + 1 < day
+          ? ''
+          : i > days + day - 2
+            ? ''
+            : i + 2 - day
       );
   }
 
   public week(weekday: StringDateFormat | undefined = 'long'): string {
     return new Intl.DateTimeFormat('ru-RU', {
-      weekday,
+      weekday
     }).format();
+  }
+
+  public static getTime(date: Date): string {
+    return new Intl.DateTimeFormat('ru-RU', {
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(date);
   }
 }

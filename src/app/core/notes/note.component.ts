@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { combineLatest, map, Observable, tap } from 'rxjs';
+import { combineLatest, map, tap } from 'rxjs';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { DataService } from 'src/app/services/data-service';
 import { KeyValue } from '@angular/common';
@@ -17,11 +17,13 @@ import { CalendarNote } from 'src/app/common/calendar-note';
 import { CalendarTask } from 'src/app/common/calendar-task';
 import { CalendarEvent } from 'src/app/common/calendar-event';
 import { CalendarShift } from 'src/app/common/calendar-shift';
+import { CalendarDate } from '../../common/calendar-date';
 
 @Component({
   selector: 'app-note',
   templateUrl: './note.component.html',
   styleUrls: ['./note.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteComponent {
   isModalOpen = false;
@@ -48,11 +50,17 @@ export class NoteComponent {
     const type = this.form.value.type;
     return 'Укажите ' + TypeTaskTargetDate[type as keyof Object];
   }
+
+  public targetTime(d: string): string {
+    const date = new Date(d);
+    return CalendarDate.getTime(date);
+  }
+
   constructor(
     private service: CalendarService,
     private router: Router,
     private dataService: DataService,
-    private _fb: FormBuilder
+    private _fb: FormBuilder,
   ) {
     this.form = this._fb.group({
       type: '',
@@ -60,7 +68,10 @@ export class NoteComponent {
     /**
      * подписка на изменения поля выбора типов
      */
-    this.form.controls['type'].valueChanges.subscribe((data: TypeTask) => {
+    combineLatest([this.form.controls['type'].valueChanges, this.selectedDate$]).subscribe(([data, date]) => {
+      const _date = date!.currentDate;
+      _date!.setHours(8, 0 ,0)
+
       /**
        *очищение общих контроллов
        */
@@ -96,9 +107,10 @@ export class NoteComponent {
         data !== TypeTask.note &&
         data !== TypeTask.shift
       ) {
+        console.log(_date.toISOString());
         this.form.addControl(
           'targetDate',
-          this._fb.control('2022-11-23T11:00:00+03:00', [Validators.required])
+          this._fb.control(_date.toISOString(), [Validators.required])
         );
       }
       /**
@@ -152,7 +164,7 @@ export class NoteComponent {
         : this.form.removeControl('hourlyRate');
     });
 
-    console.log(this.selectedDate$);
+    console.log(this.form);
   }
 
   public selectedDay$ = this.service.selectedDate$;
@@ -165,6 +177,7 @@ export class NoteComponent {
       if (d === null) {
         return;
       }
+      console.log(data.get(d!.date));
       return data.get(d!.date);
     })
   );
@@ -211,6 +224,12 @@ export class NoteComponent {
     },
   ];
 
+  public clearForm(): void {
+    Object.keys(this.form).forEach(key => {
+      this.form.controls[key].patchValue(null)
+    })
+  }
+
   clearDate(): void {
     this.router.navigate([], {
       queryParams: {
@@ -223,6 +242,7 @@ export class NoteComponent {
 
   setOpen(isOpen: boolean) {
     this.isModalOpen = isOpen;
+    this.form.controls['type'].patchValue('');
   }
   onSubmit(date: string) {
     const type = this.form.value.type;
@@ -237,5 +257,6 @@ export class NoteComponent {
       data = new CalendarShift(this.form.value);
     }
     this.dataService.createTask(data, date, type);
+    this.setOpen(false);
   }
 }

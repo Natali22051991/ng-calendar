@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, shareReplay, tap } from 'rxjs';
 import { CalendarService } from '../../services/calendar.service';
 import { CalendarDate } from '../../common/calendar-date';
 import { ActivatedRoute } from '@angular/router';
@@ -12,7 +12,10 @@ import { DataService } from 'src/app/services/data-service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarComponent implements OnInit {
-  public data$ = this.dataService.data$;
+  public data$ = this.dataService.data$.pipe(
+    tap(e => console.log(e)),
+    shareReplay({refCount: false, bufferSize: 1}),
+  );
 
   public listDaysOfSelectedMonth$: Observable<('' | CalendarDate)[]> =
     this.route.queryParams.pipe(
