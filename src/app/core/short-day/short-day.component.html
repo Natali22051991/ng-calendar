@@ -1,5 +1,13 @@
 
-<span>{{date.day}}</span>
-<ng-container *ngIf="tasks">
-  <span> Задач:{{(tasks.length)}}</span>
+<span>{{(date$|async)!.day}}</span>
+<ng-container *ngIf="tasks$|async">
+  
+  <div class="badge">
+  <span *ngFor="let type of (tasks$|async)" >
+  <ion-badge *ngIf="type.type === 'note'" color="success">{{(tasks$|async)!.length}}</ion-badge>
+  <ion-badge *ngIf="type.type === 'task'" color="danger">{{(tasks$|async)!.length}}</ion-badge>
+  <ion-badge *ngIf="type.type === 'event'"color="secondary">{{(tasks$|async)!.length}}</ion-badge>
+  <ion-badge *ngIf="type.type === 'shift'"color="warning">{{(tasks$|async)!.length}}</ion-badge>
+  </span>
+</div>
 </ng-container>

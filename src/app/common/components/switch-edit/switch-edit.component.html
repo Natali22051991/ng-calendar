@@ -1,9 +1,6 @@
 
 <ng-content></ng-content>
-<button >fff</button>
 <ng-container [ngSwitch]="isEdit$ | async">
-  <ion-button class="fill" *ngSwitchCase="false" (click)="changeState()"><img src="../../../../assets/images/edit.svg" ></ion-button>
-
-
-  <ion-button *ngSwitchDefault (click)="changeState(false)"><ion-icon name="checkmark-circle-sharp"></ion-icon></ion-button>
+  <ion-button fill="clear" *ngSwitchCase="false" (click)="changeState()"><ion-icon name="pencil-sharp"></ion-icon></ion-button>
+  <ion-button fill="clear" *ngSwitchDefault (click)="changeState(false)"><ion-icon name="checkmark-circle-sharp"></ion-icon></ion-button>
 </ng-container>

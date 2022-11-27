@@ -14,6 +14,9 @@ export class CalendarDate {
   get day(): number {
     return this.currentDate.getDate();
   }
+  get hourse(): number {
+    return this.currentDate.getHours();
+  }
 
   get dayInWeek(): string {
     return CalendarDate.getFullDateString(this.currentDate);

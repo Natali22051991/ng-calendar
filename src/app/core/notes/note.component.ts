@@ -24,7 +24,6 @@ import { CalendarShift } from 'src/app/common/calendar-shift';
   styleUrls: ['./note.component.scss'],
 })
 export class NoteComponent {
-  isActive: boolean = true;
   isModalOpen = false;
   public form!: FormGroup;
 
@@ -130,7 +129,7 @@ export class NoteComponent {
       this.form.controls['type'].value === TypeTask.shift
         ? this.form.addControl(
             'start',
-            this._fb.control('', [Validators.required])
+            this._fb.control('2022-11-23T11:00:00+03:00', [Validators.required])
           )
         : this.form.removeControl('start');
       /**
@@ -158,7 +157,6 @@ export class NoteComponent {
 
   public selectedDay$ = this.service.selectedDate$;
   public selectedDate$ = this.service.selectedDate$;
-  // :calendar.task.Note|calendar.task.Event |calendar.task.WorkingShift |calendar.task.Task
   public data$ = combineLatest([
     this.dataService.data$.pipe(tap((e) => console.log(e))),
     this.selectedDay$,
@@ -223,10 +221,6 @@ export class NoteComponent {
     this.service.day = null;
   }
 
-  add(): void {
-    this.isActive = false;
-  }
-
   setOpen(isOpen: boolean) {
     this.isModalOpen = isOpen;
   }
@@ -242,7 +236,6 @@ export class NoteComponent {
     } else if (type === TypeTask.shift) {
       data = new CalendarShift(this.form.value);
     }
-    console.log(data);
     this.dataService.createTask(data, date, type);
   }
 }
