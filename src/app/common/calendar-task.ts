@@ -1,5 +1,6 @@
 import { CalendarBaseTask } from './calendar-base-task';
 import { calendar } from '../models/calendar';
+import { CalendarDate } from './calendar-date';
 
 export class CalendarTask
   extends CalendarBaseTask

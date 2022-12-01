@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { combineLatest, map, tap } from 'rxjs';
+import { combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { DataService } from 'src/app/services/data-service';
 import { KeyValue } from '@angular/common';
@@ -23,11 +23,12 @@ import { CalendarDate } from '../../common/calendar-date';
   selector: 'app-note',
   templateUrl: './note.component.html',
   styleUrls: ['./note.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NoteComponent {
   isModalOpen = false;
   public form!: FormGroup;
+  amount!: calendar.task.Shift;
 
   /**
    *получение названия для поля title
@@ -43,11 +44,13 @@ export class NoteComponent {
     const type = this.form.value.type;
     return 'Добавить ' + TypeTaskText[type as keyof Object];
   }
+
   /**
    *получение названия для поля targetDate
    */
   public get placeHolderTargetDate() {
     const type = this.form.value.type;
+
     return 'Укажите ' + TypeTaskTargetDate[type as keyof Object];
   }
 
@@ -60,111 +63,149 @@ export class NoteComponent {
     private service: CalendarService,
     private router: Router,
     private dataService: DataService,
-    private _fb: FormBuilder,
+    private _fb: FormBuilder
   ) {
     this.form = this._fb.group({
       type: '',
     });
+
     /**
      * подписка на изменения поля выбора типов
+     *
      */
-    combineLatest([this.form.controls['type'].valueChanges, this.selectedDate$]).subscribe(([data, date]) => {
-      const _date = date!.currentDate;
-      _date!.setHours(8, 0 ,0)
 
-      /**
-       *очищение общих контроллов
-       */
-      this.form.removeControl('title');
-      this.form.removeControl('text');
-      this.form.removeControl('targetDate');
+    combineLatest([this.form.controls['type'].valueChanges, this.selectedDate$])
+      .pipe(
+        tap(([type, date]) => console.log([type, date])),
+        filter(([type, date]) => !!date?.currentDate)
+      )
+      .subscribe(([type, date]) => {
+        const _date = date!.currentDate;
 
-      /**
-       * контроллы общие
-       * название
-       */
-      if (!this.form.get('title')) {
-        this.form.addControl(
-          'title',
-          this._fb.control('', [Validators.required])
-        );
-      }
+        _date!.setHours(8, 0, 0);
 
-      /**
-       * текст
-       */
-      if (!this.form.get('text') && data !== TypeTask.shift) {
-        this.form.addControl(
-          'text',
-          this._fb.control('', [Validators.required])
-        );
-      }
-      /**
-       * дата выполнения
-       */
-      if (
-        !this.form.get('targetDate') &&
-        data !== TypeTask.note &&
-        data !== TypeTask.shift
-      ) {
-        console.log(_date.toISOString());
-        this.form.addControl(
-          'targetDate',
-          this._fb.control(_date.toISOString(), [Validators.required])
-        );
-      }
-      /**
-       * контроллы для события
-       * тип события
-       */
-      this.form.controls['type'].value === TypeTask.event
-        ? this.form.addControl(
-            'eventType',
+        /**
+         *очищение общих контроллов
+         */
+        this.form.removeControl('title');
+        this.form.removeControl('text');
+        this.form.removeControl('targetDate');
+
+        /**
+         * контроллы общие
+         * название
+         */
+        if (!this.form.get('title')) {
+          this.form.addControl(
+            'title',
             this._fb.control('', [Validators.required])
-          )
-        : this.form.removeControl('eventType');
+          );
+        }
 
-      /**
-       * контроллы для смены
-       * выбор смены
-       */
-      this.form.controls['type'].value === TypeTask.shift
-        ? this.form.addControl(
-            'description',
+        /**
+         * текст
+         */
+        if (!this.form.get('text') && type !== TypeTask.shift) {
+          this.form.addControl(
+            'text',
             this._fb.control('', [Validators.required])
-          )
-        : this.form.removeControl('description');
-      /**
-       * описание смены
-       */
+          );
+        }
+        /**
+         * дата выполнения
+         */
+        if (
+          !this.form.get('targetDate') &&
+          type !== TypeTask.note &&
+          type !== TypeTask.shift
+        ) {
+          console.log(_date.toISOString());
+          this.form.addControl(
+            'targetDate',
+            this._fb.control(_date.toISOString(), [Validators.required])
+          );
+        }
+        /**
+         * контроллы для события
+         * тип события
+         */
+        this.form.controls['type'].value === TypeTask.event
+          ? this.form.addControl(
+              'eventType',
+              this._fb.control('', [Validators.required])
+            )
+          : this.form.removeControl('eventType');
 
-      this.form.controls['type'].value === TypeTask.shift
-        ? this.form.addControl(
-            'start',
-            this._fb.control('2022-11-23T11:00:00+03:00', [Validators.required])
-          )
-        : this.form.removeControl('start');
-      /**
-       * продолжительность смены
-       */
-      this.form.controls['type'].value === TypeTask.shift
-        ? this.form.addControl(
-            'duration',
-            this._fb.control('', [Validators.required])
-          )
-        : this.form.removeControl('duration');
-      /**
-       * почасова ставка
-       */
-      this.form.controls['type'].value === TypeTask.shift
-        ? this.form.addControl(
-            'hourlyRate',
-            this._fb.control('', [Validators.required])
-          )
-        : this.form.removeControl('hourlyRate');
-    });
+        /**
+         * контроллы для смены
+         * выбор смены
+         */
+        this.form.controls['type'].value === TypeTask.shift
+          ? this.form.addControl(
+              'description',
+              this._fb.control('', [Validators.required])
+            )
+          : this.form.removeControl('description');
+        /**
+         * описание смены
+         */
+
+        this.form.controls['type'].value === TypeTask.shift
+          ? this.form.addControl(
+              'start',
+              this._fb.control(_date.toISOString(), [Validators.required])
+            )
+          : this.form.removeControl('start');
+        /**
+         * продолжительность смены
+         */
+        this.form.controls['type'].value === TypeTask.shift
+          ? this.form.addControl(
+              'duration',
+              this._fb.control('', [Validators.required])
+            )
+          : this.form.removeControl('duration');
+        /**
+         * почасова ставка
+         */
+        this.form.controls['type'].value === TypeTask.shift
+          ? this.form.addControl(
+              'hourlyRate',
+              this._fb.control('', [Validators.required])
+            )
+          : this.form.removeControl('hourlyRate');
+        /**
+         * сумма за день
+         */
+        this.form.controls['type'].value === TypeTask.shift
+          ? this.form.addControl(
+              'amount',
+              this._fb.control('', [Validators.required])
+            )
+          : this.form.removeControl('amount');
+      });
 
     console.log(this.form);
+
+    this.form.controls['type'].valueChanges
+      .pipe(
+        filter((t) => t === 'shift'),
+        switchMap((t) =>
+          combineLatest([
+            this.form.controls['duration'].valueChanges,
+            this.form.controls['hourlyRate'].valueChanges,
+            of(t),
+          ])
+        ),
+        tap(([d, h, t]) => console.log([d, h, t]))
+      )
+      .subscribe(([d, h, t]) => {
+        const time = d!.split(':');
+        const hours = +((+time[0] * 60 + +(+time[1])) / 60).toFixed(2);
+        const sum = hours * +h;
+        this.form.controls['amount'].patchValue(sum);
+        console.log(this.form.controls['amount'].value);
+      });
   }
 
   public selectedDay$ = this.service.selectedDate$;
@@ -225,9 +266,9 @@ export class NoteComponent {
   ];
 
   public clearForm(): void {
-    Object.keys(this.form).forEach(key => {
-      this.form.controls[key].patchValue(null)
-    })
+    Object.keys(this.form).forEach((key) => {
+      this.form.controls[key].patchValue(null);
+    });
   }
 
   clearDate(): void {

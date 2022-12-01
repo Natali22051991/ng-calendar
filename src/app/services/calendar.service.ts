@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, Observable, of, takeUntil } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  map,
+  Observable,
+  of,
+  takeUntil,
+} from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CalendarDate } from '../common/calendar-date';
 import { DestroyService } from '../common/destroy';
@@ -15,7 +22,7 @@ export class CalendarService extends DestroyService {
     this._selectedDay$.next(day);
   }
 
-  private _selectedDay$ = new BehaviorSubject<number | null>(null)
+  private _selectedDay$ = new BehaviorSubject<number | null>(null);
 
   public selectedDay$: Observable<number | null> = this._selectedDay$;
   public selectedMonth$ = new BehaviorSubject(this.currentDate.getMonth() + 1);
@@ -37,7 +44,8 @@ export class CalendarService extends DestroyService {
   ) {
     super();
 
-    combineLatest([this.selectedYear$, this.selectedMonth$, this.selectedDay$]).pipe(
+    combineLatest([this.selectedYear$, this.selectedMonth$, this.selectedDay$])
+      .pipe(
         map(([year, month, day]) => {
           const result = { year, month };
           if (day) {
@@ -46,7 +54,8 @@ export class CalendarService extends DestroyService {
           return result;
         }),
         takeUntil(this)
-      ).subscribe((date) => {
+      )
+      .subscribe((date) => {
         this._router.navigate([], {
           queryParams: date,
         });

@@ -13,8 +13,8 @@ import { DataService } from 'src/app/services/data-service';
 })
 export class CalendarComponent implements OnInit {
   public data$ = this.dataService.data$.pipe(
-    tap(e => console.log(e)),
-    shareReplay({refCount: false, bufferSize: 1}),
+    tap((e) => console.log(e)),
+    shareReplay({ refCount: false, bufferSize: 1 })
   );
 
   public listDaysOfSelectedMonth$: Observable<('' | CalendarDate)[]> =
