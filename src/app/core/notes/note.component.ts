@@ -1,7 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
+import {
+  combineLatest,
+  filter,
+  map,
+  of,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { DataService } from 'src/app/services/data-service';
 import { KeyValue } from '@angular/common';
@@ -55,7 +63,12 @@ export class NoteComponent {
   }
 
   public targetTime(d: string): string {
+    console.log(d);
+
     const date = new Date(d);
+
+    console.log(date);
+
     return CalendarDate.getTime(date);
   }
 
@@ -120,6 +133,12 @@ export class NoteComponent {
           type !== TypeTask.shift
         ) {
           console.log(_date.toISOString());
+          console.log(_date.toDateString());
+          console.log(_date.toLocaleDateString());
+          console.log(_date.toLocaleTimeString());
+          console.log(_date.toUTCString());
+          console.log(_date.getTimezoneOffset());
+
           this.form.addControl(
             'targetDate',
             this._fb.control(_date.toISOString(), [Validators.required])
@@ -183,6 +202,13 @@ export class NoteComponent {
               this._fb.control('', [Validators.required])
             )
           : this.form.removeControl('amount');
+
+        this.form.controls['type'].value === TypeTask.shift
+          ? this.form.addControl(
+              'and',
+              this._fb.control('56', [Validators.required])
+            )
+          : this.form.removeControl('and');
       });
 
     console.log(this.form);
@@ -206,6 +232,22 @@ export class NoteComponent {
         this.form.controls['amount'].patchValue(sum);
         console.log(this.form.controls['amount'].value);
       });
+
+    this.form.controls['type'].valueChanges
+      .pipe(
+        filter((t) => t === 'shift'),
+        switchMap((t) =>
+          combineLatest([
+            this.form.controls['duration'].valueChanges,
+            this.form.controls['start'].valueChanges.pipe(
+              startWith(this.form.controls['start'].value)
+            ),
+            of(t),
+          ])
+        ),
+        tap(([d, s, t]) => console.log([d, s, t]))
+      )
+      .subscribe(([d, s, t]) => {});
   }
 
   public selectedDay$ = this.service.selectedDate$;

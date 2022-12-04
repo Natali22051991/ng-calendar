@@ -1,11 +1,10 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   Input,
   OnInit,
 } from '@angular/core';
-import { BehaviorSubject, combineLatest, filter, map, Observable, retry } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, Observable } from 'rxjs';
 import { CalendarDate } from 'src/app/common/calendar-date';
 import { calendar } from '../../models/calendar';
 import { DataService } from '../../services/data-service';
@@ -28,17 +27,17 @@ export class ShortDayComponent implements OnInit {
   );
 
   taskNote$: Observable<calendar.task.Type[] | null> = this.tasks$.pipe(
-    map(t => t ? t.filter(task => task.type === TypeTask.note) : null)
-  )
+    map((t) => (t ? t.filter((task) => task.type === TypeTask.note) : null))
+  );
   taskTask$: Observable<calendar.task.Type[] | null> = this.tasks$.pipe(
-    map(t => t ? t.filter(task => task.type === TypeTask.task) : null)
-  )
+    map((t) => (t ? t.filter((task) => task.type === TypeTask.task) : null))
+  );
   taskEvent$: Observable<calendar.task.Type[] | null> = this.tasks$.pipe(
-    map(t => t ? t.filter(task => task.type === TypeTask.event) : null)
-  )
+    map((t) => (t ? t.filter((task) => task.type === TypeTask.event) : null))
+  );
   taskShift$: Observable<calendar.task.Type[] | null> = this.tasks$.pipe(
-    map(t => t ? t.filter(task => task.type === TypeTask.shift) : null)
-  )
+    map((t) => (t ? t.filter((task) => task.type === TypeTask.shift) : null))
+  );
 
   public refs = TypeTask;
 
@@ -50,10 +49,7 @@ export class ShortDayComponent implements OnInit {
     this.data$.next(value);
   }
 
-  constructor(
-    private dataService: DataService,
-    private cdr: ChangeDetectorRef
-  ) {}
+  constructor(private dataService: DataService) {}
 
   ngOnInit(): void {}
 }
