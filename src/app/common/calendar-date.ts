@@ -80,6 +80,8 @@ export class CalendarDate {
   }
 
   public static getTime(date: Date): string {
+    console.log(date);
+
     return new Intl.DateTimeFormat('ru-RU', {
       hour: '2-digit',
       minute: '2-digit',
